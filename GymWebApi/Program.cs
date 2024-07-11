@@ -1,6 +1,7 @@
 using GymWebApi.Data;
 using GymWebApi.Interfaces;
 using GymWebApi.Services;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 
@@ -12,8 +13,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<UserDbContext>(options =>
-        options.UseSqlite("DataSource=:memory:"));
+
+var cnn = new SqliteConnection("Filename=:memory:");
+cnn.Open();
+builder.Services.AddDbContext
+<UserDbContext>(o => o.UseSqlite(cnn));
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddControllers();
